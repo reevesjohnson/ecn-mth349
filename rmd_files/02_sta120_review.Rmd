@@ -1,11 +1,11 @@
 ---
 title: "**Practicing R: A Review of STA120**"
 output:
-  html_document: 
-    toc: true
-    toc_float: true
-fontsize: 12pt
-geometry: margin=2cm
+  word_document: default
+  html_document: default
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, encoding = encoding,
+  output_dir = "output", output_format = "all") })
 urlcolor: blue
 ---
 
@@ -289,7 +289,7 @@ t_sim <- rt(n = 1000, df = 47)
 The first dataset we'll use to review linear regression consists of a sample of 40 households that provides each households monthly income and monthly expenditure on food. It's a .csv file located on my github page and can be imported into R by running:
 
 ```{r, message = FALSE}
-# Import data from Github; call dataframe food
+# Import data from Github; call dataframe food_df
 food_df <- read_csv("https://bit.ly/2UVB1Eg")
 ```
 
@@ -789,7 +789,7 @@ Remember, the first four were used to establish unbiasedness of OLS, whereas the
 
 Chapter 6 from the STA120 textbook concerns the general question of whether there's a significant difference between 2 groups, the difference being measured by the means of the 2 groups. In this review, we'll examine the same question (and extensions to it), but from a regression perspective. So this material builds upon the previous section on simple linear regression. Import these data with the following command:
 
-```{r, results = 'hide'}
+```{r, results = 'hide', message = FALSE}
 # Import wage data from github; call it wages_df
 wages_df <- read_csv("https://bit.ly/3AgeBO4")
 ```

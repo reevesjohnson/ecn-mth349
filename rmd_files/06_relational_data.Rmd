@@ -1,10 +1,12 @@
 ---
 title: "**Tidy Data and Relational Data**"
 output:
-  pdf_document: default
   word_document: default
-fontsize: 12pt
-geometry: margin=2cm
+  html_document: default
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, encoding = encoding,
+  output_dir = "output", output_format = "all") })
+urlcolor: blue
 ---
 
 ```{r setup, include=FALSE}
