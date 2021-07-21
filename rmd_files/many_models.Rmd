@@ -1,0 +1,21 @@
+---
+title: "**Using Big Data to Fit Many Models**"
+output:
+  pdf_document: default
+  word_document: default
+fontsize: 12pt
+geometry: margin=2cm
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+gdp_unemp_df <- read_csv("https://bit.ly/2SZazJc")
+gdp_unemp_df <- gdp_unemp_df %>% mutate_all(as.character)
+```
+
+# Nested Data Frames
+
+# Functional Programming
+
+# Many Models
