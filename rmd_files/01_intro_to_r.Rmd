@@ -1,9 +1,11 @@
 ---
 title: "R: An Introduction"
 output:
-  html_document: default
   pdf_document: default
-urlcolor: blue
+  html_document: default
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, encoding = encoding,
+  output_dir = "output", output_format = "all") })
 ---
 
 ```{r setup, include=FALSE}
