@@ -1,7 +1,7 @@
 ---
 title: "**Data Types and Data Structures**"
 output:
-  word_document: default
+  pdf_document: default
   html_document: default
 knit: (function(inputFile, encoding) {
   rmarkdown::render(inputFile, encoding = encoding,
