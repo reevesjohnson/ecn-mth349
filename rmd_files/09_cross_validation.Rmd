@@ -15,13 +15,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Quantifying the Quality of a Fit
 
-How do you measure the performance of your fitted model? That is, what mathematical standard should you use to measure how well the model's predictions compare to the data? There are many such measures, but the one most commonly-used is the *mean-squared error* (MSE), defined by:
-
-$$
-MSE = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y}_i)^2, 
-$$
-
-where $\hat{y}_i$ is the predicated value of the $i$th observation. One way to remember the $MSE$ formula is to think about it backwards: Find the "error" ($E$) or distance between the observed value, $y_i$ and its predicted value, $\hat{y}_i$; "square" ($S$) this error; then take its "mean" ($M$) over all $n$ observations.
+> How do you measure the performance of your fitted model? That is, what mathematical standard should you use to measure how well the model's predictions compare to the data? There are many such measures, but the one most commonly-used is the *mean-squared error* (MSE), defined by:
+>
+> $$
+> MSE = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y}_i)^2, 
+> $$
+>
+> where $\hat{y}_i$ is the predicated value of the $i$th observation. One way to remember the $MSE$ formula is to think about it backwards: Find the "error" ($E$) or distance between the observed value, $y_i$ and its predicted value, $\hat{y}_i$; "square" ($S$) this error; then take its "mean" ($M$) over all $n$ observations.
 
 # Training and Test Data
 

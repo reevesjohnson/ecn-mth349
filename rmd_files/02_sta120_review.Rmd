@@ -15,9 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r, include=FALSE}
 library(tidyverse)
-cf <- read_csv("/Users/reeves.johnson/OneDrive - Maryville College/maryville_od/ECN 321 - Macro/econometrics/labs/lab2/cf_expanded.csv")
-food <- read_csv("/Users/reeves.johnson/OneDrive - Maryville College/maryville_od/ECN 321 - Macro/econometrics/labs/lab2/food.csv")
-food_expanded <- read_csv("/Users/reeves.johnson/OneDrive - Maryville College/maryville_od/ECN 321 - Macro/econometrics/labs/lab2/food_expanded.csv")
+food_expanded <- read_csv("https://bit.ly/2UD4cMm")
 ```
 
 # One Nominal Variable (Chapter 1)
@@ -266,7 +264,7 @@ where the $s$'s denominator, $n-1$, is the number of degrees of freedom.
 
 Because we're dealing with a continuous variable the sampling distribution is a continuous distribution. Recall that a sampling distribution is a distribution of a statistic, in the present case a sample mean. Time is a continuous variable and if we drew lots of samples of times and took the mean of each, after an infinite number of draws we'd have a continuous distribution of sample means. This is different from the Buzz and Doris scenario where the variable was nominal (success/failure). No matter how many would-be samples we drew, we'd arrive at a number between 0 and 16 with every sample drawn, and hence there'd always be gaps between the possible statistics in the sampling distribution. We saw those gaps between 0, 1, and so on when we plotted the binomial distribution earlier.
 
-The continuous sampling distribution when the experiment involves a single continuous variable is called the ***t*****-distribution**. You may recall that the *t*-distribution is similar to the normal distribution, but its tails are thicker than the normal distribution, meaning there's greater uncertainty for values far from the mean than the normal distribution.
+The continuous sampling distribution when the experiment involves a single continuous variable is called the *t*-distribution. You may recall that the *t*-distribution is similar to the normal distribution, but its tails are thicker than the normal distribution, meaning there's greater uncertainty for values far from the mean than the normal distribution.
 
 ### Simulating a *t*-Distribution
 
@@ -305,15 +303,14 @@ Suppose we wanted to draw a line through the points. Which line would best repre
 
 [^3]: Why take the vertical distances instead of the horizontal distances? The simple linear regression model assumes the values of independent variable are constant (non-stochastic) and thus examines the variation in the dependent variable.
 
-<!-- Plot of residuals as vertical distamces -->
+<!-- Plot of residuals as vertical distances -->
 
 ```{r, echo = FALSE, out.width = "70%", fig.align = "center", message=FALSE}
-ggplot(data = food_expanded, 
-       mapping = aes(income, food_exp)) + 
+ggplot(data = food_expanded, aes(income, food_exp)) + 
   geom_point(color="red") + 
-  geom_smooth(se=FALSE, method = "lm") +
+  geom_smooth(method = "lm", se = FALSE) +
   geom_segment(aes(x = income, y = food_exp,
-                   xend = income, yend = fitted)) +
+                   xend = income, yend = predicted)) +
   labs(title = "Linear Regression with Size of Residuals Depicted")
 ```
 
@@ -327,7 +324,7 @@ No real-world dataset would appear linear, although it makes sense that the clos
 
 [^5]: Think of the graph of $f(x) = x^2$ compared to $g(x) = x$. Letting $x$ measure the residual distance, then for $x < 1$ and $x > 1$ the vertical distance between the two graphs gets larger and larger as the size of residuals (in absolute value) grows.
 
-## Running a Linear Regression
+## Part I: Running a Linear Regression
 
 Now that we have some intuition about the least squares principle and why R plots a regression line where it does, let's run a regression of these data.
 
@@ -499,74 +496,89 @@ Notice that as income increases the (absolute) value of the residuals tend to in
 
 [^6]: If you added a regression line to this plot it would be horizontal with a constant value of 0. Why? Because the magnitudes of the residuals cancel each other out rendering the average to be 0.
 
-### Part II: Estimating the Marginal Propensity to Consume
+## Part II: Estimating the Marginal Propensity to Consume
 
 ```{r, results = 'hide', message = FALSE}
 # Import consumption-income data from github; call it cf_df
 cf_df <- read_csv("https://bit.ly/3dwl5P9")
 ```
 
-#### Instructions
+<!--\# Instructions**Preliminary Steps:**Open R and create a new R script.In the Environment tab in the upper-right corner, click Import Dataset and then click From Text (readr).Find cf.csv by clicking Browse. Once you find it click Import.If the data frame doesn't automatically appear, then type `View(cf_df)` into the console to view the data.Instructions**Preliminary Steps:**Open R and create a new R script.In the Environment tab in the upper-right corner, click Import Dataset and then click From Text (readr).Find cf.csv by clicking Browse. Once you find it click Import.If the data frame doesn't automatically appear, then type `View(cf_df)` into the console to view the data.-->
 
-**Preliminary Steps:**
-
-1.  Open R and create a new R script.
-2.  In the Environment tab in the upper-right corner, click Import Dataset and then click From Text (readr).
-3.  Find cf.csv by clicking Browse. Once you find it click Import.
-4.  If the data frame doesn't automatically appear, then type `View(cf_df)` into the console to view the data.
-
-#### Managing Your Data
+### Creating New Variables
 
 The marginal propensity to consume ($mpc$) is defined as the change in consumption spending given a \$1 change in disposable income, or: $$
 mpc = \frac{\Delta C}{\Delta Y}
-$$The `cf_df` data frame consists of (real) consumption expenditures and (real) disposable income per year from 1959 to 2018. You need to first create new columns in `cf_df` with the differences of each variable to correspond with the definition of the $mpc$. Next, to aid in interpreting the data, you'll subtract the mean of the difference from each difference. This is called *mean-centering* a variable, which is explained in detail in the Appendix below. Follow these steps to create the desired variables:
+$$The `cf_df` data frame consists of (real) consumption expenditures and (real) disposable income per year from 1959 to 2018. You need to first create new columns in `cf_df` with the differences of each variable to correspond with the definition of the $mpc$. Next, to aid in interpreting the data, you'll subtract the mean of the difference from each difference. This is called *mean-centering* a variable, which is explained in detail in the Appendix below. You'll use `mutate()` again to add new variables to `cf_df`. Follow these steps"
 
 **Step 1:**
 
-To difference a variable lag the variable by 1 period and subtract it from the current period. For each new variable add `_delta` to the end of its name so you know you're dealing with a difference.
+To difference a variable, use the `lag()` function, which requires you to specify which variable to lag and by how many periods. Then subtract it from the non-lagged vector. For each new variable add `_delta` to the end of its name to indicate that these new variables are differences.
 
 ```{r}
-# Create differences in both variables
-cf_df$c_delta <- cf_df$cons - lag(cf_df$cons, 1)
-cf_df$yd_delta <- cf_df$yd - lag(cf_df$yd, 1)
+# Create new differenced variables using mutate()
+cf_df <- cf_df %>% 
+  mutate(c_delta = cons - lag(cons, 1),
+         yd_delta = yd - lag(yd, 1))
 ```
 
 You've now created $\Delta C_t$ and $\Delta Y_{t}$. The `cf_df` data frame should now have 5 variables after creating `c_delta` and `y_delta`. You should verify that `cf_df` has 5 columns and that the values in the new columns are the differences between a cell and the cell above it.
 
-Finally, it's important to notice that one observation is lost after differencing. That's why the values in the first row of `c_delta` and `y_delta` are both `NA`.
+Finally, it's critical to notice that one observation is lost after differencing. That's why the values in the first row of `c_delta` and `y_delta` are both `NA`.
 
 **Step 2:**
 
 Now, mean center each variable by subtracting the mean of the differences from each value of the difference.
 
 ```{r}
-# Mean center the differences, ignoring the observation lost by differencing
-cf_df$c_delta_mean <- cf_df$c_delta - mean(cf_df$c_delta, na.rm = TRUE)
-cf_df$yd_delta_mean <- cf_df$yd_delta - mean(cf_df$yd_delta, na.rm = TRUE)
+# Mean center the differences; ignore the observation lost by differencing
+cf_df <- cf_df %>% 
+  mutate(c_delta_mean = c_delta - mean(c_delta, na.rm = TRUE),
+         yd_delta_mean = yd_delta - mean(yd_delta, na.rm = TRUE))
 ```
 
 Because we lost one observation by differencing each time series we had to add the argument `na.rm = TRUE` inside `mean()`. The extra argument, `na.rm = TRUE`, instructs R to remove any cells with `NA` values when taking the mean of a column. If we didn't include `na.rm = TRUE`, then R would yell at us because it can't take the mean of a vector containing a non-numerical values like `NA`.
 
 Verify that data frame `cf` now has 7 variables before moving on.
 
-## Plotting the Data
+### Digression: Mean Centering Variables
+
+The last command mean-centered both the dependent and independent variable. It's often a good idea to mean center the independent variable in order to make the intercept estimate meaningful. Consider this example from the `wages_df` dataset.
+
+```{r, results = 'hide', message = FALSE}
+# Import wage data from github; call it wages_df
+wages_df <- read_csv("https://bit.ly/3AgeBO4")
+```
+
+You'll use this dataset in the final section of this module to examine differences in pay between genders. Here, though, let's examine the relationship between age and wages by running a regression and viewing the results:
+
+```{r, results = 'hide'}
+summary(lm(wage ~ age, data = wages_df))
+```
+
+As you would expect, as workers get older the more they are paid. But, what does an estimated intercept of about the intercept of 16117.50 mean? Is it meaningful?
+
+Plotting the data and the estimated regression line clearly shows we're extrapolating well beyond the data:
+
+```{r}
+ggplot(data = wages_df, aes(x = age, y = wage)) + 
+  geom_point() +
+  geom_abline(intercept = 16117.5, slope = 108, color = 
+                'blue') +
+  expand_limits(x = 0)
+```
+
+In order to obtain a meaningful intercept estimate, you should mean-center the independent variable, `age`. When you mean center the independent variable the intercept is no longer the estimated value of the dependent variable when the independent variable is 0; instead, the intercept is the estimated value of the dependent variable when the independent variable is at its mean. In this example, after mean centering `age`, the intercept estimate is the expected wage for average-aged workers.
+
+### Plotting the Data
 
 Using **ggplot2** make one scatterplot with the following attributes:
 
-1.  Put c_delta_mean on the vertical axis and yd_delta_mean on the horizontal axis.
+1.  Put `c_delta_mean` on the vertical axis and `yd_delta_mean` on the horizontal axis.
 2.  Add a regression line to the plot without confidence intervals.
-3.  Make an approriate title.
+3.  Make an approriate title
 
-## Create a Residual Plot
-
-Recall that the first row contains a number of cells that are `NA`. If we're going to add a column of residuals with length
-
-```{r, results = 'hide'}
-# Delete first row of cf_df
-cf_df <- cf_df[-1, ]
-```
-
-#### Running a Regression
+### Running a Regression (Again)
 
 Plotting the regression line offers general information about the model. But we need more specific information. For example, a plot reveals whether the slope is positive or negative, but what's the actual slope of the regression line? To answer such a question you need to run the linear regression model. Running a linear regression requires the linear model function, `lm()`, which uses the following general syntax:
 
@@ -582,10 +594,17 @@ In our case, we need to execute the following code:
 cf_fit <- lm(c_delta_mean ~ yd_delta_mean, data = cf_df)
 ```
 
-You'll always want to assign a name to every model because your investigative work begins after running. For example, we want at the very least to know the values of the estimated parameters and look at summary measures of how well the model fits the data. The `summary()` function returns basic results in the Console:
+You'll always want to assign a name to every model because your investigative work begins after running. For example, we want at the very least to know the values of the estimated parameters and look at summary measures of how well the model fits the data. Use `tidy()` and `glance()` from the **broom** package as before:
 
-```{r}
-summary(cf_fit)
+```{r, results = 'hide', message = FALSE}
+# Load broom package into R
+library(broom)
+
+# Use glance() to return summary of model 
+cf_fit %>% glance()
+
+# Use tidy() to return a coefficient table
+food_fit %>% tidy()
 ```
 
 First, note that the estimate for `yd_delta_mean` is 0.68 after rounding up. This means the regression line we already plotted takes the following form: $$
@@ -597,8 +616,13 @@ How are we supposed to interpret the estimated $mpc$? An estimate of 0.68 means 
 ## Least Squares Estimation
 
 ```{r}
+# Add residuals of model to cf_df 
+cf_df <- cf_df %>% add_residuals(cf_fit)
+```
+
+```{r}
 # Add predicted values to cf_df
-cf_df$predicted <- fitted(cf_fit) 
+cf_df <- cf_df %>% add_predictions(cf_fit)
 ```
 
 <!-- Plot of residuals as vertical distamces -->
@@ -609,7 +633,7 @@ ggplot(cf_df,
   geom_point(color = "red") + 
   geom_smooth(method = "lm", se = FALSE) +
   geom_segment(aes(x = yd_delta_mean, y = c_delta_mean,
-                   xend = yd_delta_mean, yend = predicted)) +
+                   xend = yd_delta_mean, yend = pred)) +
   labs(title = "Linear Regression with Size of Residuals Depicted")
 ```
 

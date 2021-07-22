@@ -51,7 +51,7 @@ multiply
 
 We'll assign names to most of the objects we'll use in this class. You should always use descriptive names for these objects to help you remember what they are. For example, if you have data on unemployment rates you might name it `ur`.
 
-# Functions
+# (Built-In) Functions
 
 Functions allow us to manipulate objects. Like mathematical functions, R functions require arguments and these arguments are always enclosed by parenthesis `()`. One of the most basic and frequently used function is the concatenate function, written as `c()`. You'll use it to create a vector (an ordered sequence). For example, create a vector called `x` with some randomly chosen numbers:
 
