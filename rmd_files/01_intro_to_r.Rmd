@@ -35,9 +35,7 @@ Notice how R simply ignored the line beginning with the `#`; that line is for yo
 
 # Variables and Assignment
 
-Most of your R code will require you to store it for later use. To do so you need to assign the object[^1] a name. To assign an object a name use the `<-` symbol. For example, run the following code:
-
-[^1]: By way of example, the Consumer Price Index in the FRED database is named CPIAUCSL. Not a very descriptive name. Simplifying its name to `cpi` in R will keep you from constantly asking yourself "What is CPIAUCSL?".
+Most of your R code will require you to store it for later use. To do so you need to assign the object a name. To assign an object a name use the `<-` symbol. For example, run the following code:
 
 ```{r}
 multiply <- 5*6
@@ -109,9 +107,9 @@ A typical work flow may start with us importing data and saving it as a variable
 df <- mtcars # Rename mtcars as df
 ```
 
-It wasn't necessary to assign the `mtcars` dataframe a new name, but it's frequently convenient to do so. The reason why, and one we'll encounter multiple times this semester, is that when we download data from websites (e.g., the Federal Reserve's FRED database), their given names are awkward alphanumeric strings and non-descriptive of the dataset.[^2]
+It wasn't necessary to assign the `mtcars` dataframe a new name, but it's frequently convenient to do so. The reason why, and one we'll encounter multiple times this semester, is that when we download data from websites (e.g., the Federal Reserve's FRED database), their given names are awkward alphanumeric strings and non-descriptive of the dataset.[^1]
 
-[^2]: By way of example, the Consumer Price Index in the FRED database is named CPIAUCSL. Not a very descriptive name. Simplifying its name to `cpi` in R will keep you from constantly asking yourself "What is CPIAUCSL?".
+[^1]: By way of example, the Consumer Price Index in the FRED database is named CPIAUCSL. Not a very descriptive name. Simplifying its name to `cpi` in R will keep you from constantly asking yourself "What is CPIAUCSL?".
 
 <!-- An important feature of dataframes is that the columns may contain different datatypes. A common datatype in psychology is a factor. For instance, you may have an experimental group and control group. R has special features for factors. We can tell R a certain column is a factor using the factor function. I will show an example below.  -->
 

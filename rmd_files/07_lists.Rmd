@@ -11,6 +11,7 @@ urlcolor: blue
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 
 # Vectors, Again
@@ -121,7 +122,7 @@ From that last command you should see a sublist of `summary(mtcars_reg)` called 
 summary(mtcars_reg)$coefficients
 ```
 
-To extract any entry in this \$a\$ \$2 \\times 2\$ array, use square brackets, `[]`, with 2 indicies within the square brackets: The first index referring to the row of the array, the second referring to the column of the array. If you've dealt with matrices before, this way to specify an entry of a matrix should sound familiar. That is, the entry in the $i^{th}$ row and $j^{th}$ column from matrix $x$ is denoted by $x_{ij}$; the row index preceding the column index. Likewise with lists: To extract the entry in the the $i^{th}$ row and $j^{th}$ column of a list, you'll enter `[i,j]`. So you can think of square brackets as a type of matrix.
+To extract any entry in this \$2 \\times 2\$ array, use square brackets, `[]`, with 2 indicies within the square brackets: The first index referring to the row of the array, the second referring to the column of the array. If you've dealt with matrices before, this way to specify an entry of a matrix should sound familiar. That is, the entry in the $i^{th}$ row and $j^{th}$ column from matrix $x$ is denoted by $x_{ij}$; the row index preceding the column index. Likewise with lists: To extract the entry in the the $i^{th}$ row and $j^{th}$ column of a list, you'll enter `[i,j]`. So you can think of square brackets as a type of matrix.
 
 Let's consider some examples. To extract the slope estimate, `wt`, which is located in the 2nd row and the first column, run:
 
@@ -144,4 +145,74 @@ Dividing a coefficient's estimate by its standard error approximates its $t$-val
 summary(mtcars_reg)$coefficients[2,1]/summary(mtcars_reg)$coefficients[2,2]
 ```
 
-This is a lot of typing with little payoff. You'll learn how to expedite the process by creating your own function that will extract estimates with much less effort.
+This is a lot of typing with little payoff. Expedite the process by creating your own function that will extract estimates with much less effort.
+
+# The `map` Function
+
+Create a list of 4 entries with each entry a set of randomly-generated numbers from different normal distributions:
+
+```{r}
+set.seed(1325)
+
+normal_list <- list(a = rnorm(n = 50, mean = 1, sd = 1),
+                    b = rnorm(n = 10, mean = -0.5, sd = 0.5),
+                    c = rnorm(n = 140, mean = 9, sd = 0.7),
+                    d = rnorm(n = 7, mean = -7, sd = 6))
+```
+
+Note, for example, that list-element `c` contains 140 numbers, while `d` contains only 7 numbers.
+
+If you wanted the mean and standard deviation from each of these list-elements you could call `mean()` and `sd()` 4 times apiece to obtain the summary statistics. But, creating a function is a much more efficient way to complete this task:
+
+```{r}
+# Create function to compute mean and sd; return as a tibble
+mean_and_sd <- function(x) {
+                  mean_x <- mean(x)
+                  sd_x <- sd(x)
+
+                  tibble(mean = mean_x, 
+                         sd = sd_x)
+}
+```
+
+Using `mean_and_sd()` determine the means and standard deviations of the 4 list components using appropriate list-extraction syntax (whichever of the 3 ways you prefer):
+
+```{r}
+# Compute 4 means and sds from normal_list 
+mean_and_sd(normal_list[[1]])
+mean_and_sd(normal_list[[2]])
+mean_and_sd(normal_list[[3]])
+mean_and_sd(normal_list[[4]])
+```
+
+I still had to copy-and-paste the first line 3 times and then replace the `1` with a `2` and then the `1` with a `3` and then the `1` with a `4`. The `mean_and_sd()` function was more efficient than simply applying `mean()` and `sd()` to each of the lists. But there's still a better way to automate this task. How about a for loop?
+
+As with all for loops, first allocate space to save the output with the `vector()` function. The only difference from past storage vectors is that, instead of each element of the vector being a double, save them as a list. In this case, you'll have 4 list components consisting of the 4 tibbles, each tibble containing a mean and standard deviation.
+
+As for the body of the for loop, it's very similar to the last command except that instead of a numeric index, introduce the arbitrary index `i`.
+
+```{r}
+# Create for loop to compute means and sds; save them in output
+output <- vector("list", length(normal_list))
+
+for (i in seq_along(normal_list)) {
+  output[[i]] <-  mean_and_sd(normal_list[[i]])
+}
+```
+
+You should view `output` in the Environment tab to confirm it's in fact a list with the 4 mean-standard-deviation pairs as its list components.
+
+This for loop proved to be the most efficient way to generate these means and standard deviations. But for loops aren't without flaws. For example, if you were reading the above code block, it'd take some time to figure out what's going on. The core of a for loop is its body. But the body is relatively small in comparison to the total amount of code required to define a for loop. Then there's always the book-keeping involved when performing iteration, which distracts from the for loops objective.
+
+The `map()` function from the **purrr** package strips down iteration to its basics: It takes a vector/list/dataframe as input, applies a function to each of its pieces and returns a new object of the same length. Let's use `map()` to do what the for loop above does.
+
+The first argument of `map()` is the vector/list/dataframe you want to iterate over. The second argument is the function you want applied to each piece. In our case, we'll apply the function `mean_and_sd()` to `normal_list`.
+
+```{r}
+# Use map to return means and sds of normal_list 
+output_map <- map(normal_list, mean_and_sd)
+```
+
+Compare `output` to `output_map` to confirm the same object is returned, i.e., a list consisting of 4 tibbles, each with a mean and standard deviation.
+
+The `map()` permits you to narrow your focus on the 2 core components of iteration: The object to be iterated over and the function applied to that object. All the iteration book-keeping and additional code necessary when crafting a for loop are behind the scenes when calling `map()`, allowing you to concentrate on what's fundamental.

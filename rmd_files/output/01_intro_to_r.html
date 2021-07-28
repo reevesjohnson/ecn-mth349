@@ -185,15 +185,15 @@ pre code {
 </div>
 <div id="variables-and-assignment" class="section level1">
 <h1>Variables and Assignment</h1>
-<p>Most of your R code will require you to store it for later use. To do so you need to assign the object<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> a name. To assign an object a name use the <code>&lt;-</code> symbol. For example, run the following code:</p>
+<p>Most of your R code will require you to store it for later use. To do so you need to assign the object a name. To assign an object a name use the <code>&lt;-</code> symbol. For example, run the following code:</p>
 <pre class="r"><code>multiply &lt;- 5*6</code></pre>
 <p>Notice that, by assigning <code>5*6</code> a name, R didn’t return the number 30 (the produce of 5 and 6). Here is what R understood from the above command: The name of <code>5*6</code> is <code>multiply</code>. To get R to return the result, you need to refer to it by its name, like this:</p>
 <pre class="r"><code>multiply</code></pre>
 <pre><code>## [1] 30</code></pre>
 <p>We’ll assign names to most of the objects we’ll use in this class. You should always use descriptive names for these objects to help you remember what they are. For example, if you have data on unemployment rates you might name it <code>ur</code>.</p>
 </div>
-<div id="functions" class="section level1">
-<h1>Functions</h1>
+<div id="built-in-functions" class="section level1">
+<h1>(Built-In) Functions</h1>
 <p>Functions allow us to manipulate objects. Like mathematical functions, R functions require arguments and these arguments are always enclosed by parenthesis <code>()</code>. One of the most basic and frequently used function is the concatenate function, written as <code>c()</code>. You’ll use it to create a vector (an ordered sequence). For example, create a vector called <code>x</code> with some randomly chosen numbers:</p>
 <pre class="r"><code>x &lt;- c(3, 6, -2, 0, -27)</code></pre>
 <p>What’s the mean of <code>x</code>? Use the <code>mean()</code> function to find out:</p>
@@ -232,7 +232,7 @@ library(car) # Load the car package into R</code></pre>
 <p>The term <em>dataframe</em> refers to datasets, and a dataframe is essentially a dynamic Excel spreadsheet. Dataframes consist of rows (observations) and columns (variables). Some dataframes are built into base R and so we don’t need to install packages to access them. We have already seen an example of this with the <code>mtcars</code> dataframe.</p>
 <p>A typical work flow may start with us importing data and saving it as a variable, like this:</p>
 <pre class="r"><code>df &lt;- mtcars # Rename mtcars as df</code></pre>
-<p>It wasn’t necessary to assign the <code>mtcars</code> dataframe a new name, but it’s frequently convenient to do so. The reason why, and one we’ll encounter multiple times this semester, is that when we download data from websites (e.g., the Federal Reserve’s FRED database), their given names are awkward alphanumeric strings and non-descriptive of the dataset.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
+<p>It wasn’t necessary to assign the <code>mtcars</code> dataframe a new name, but it’s frequently convenient to do so. The reason why, and one we’ll encounter multiple times this semester, is that when we download data from websites (e.g., the Federal Reserve’s FRED database), their given names are awkward alphanumeric strings and non-descriptive of the dataset.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <!-- An important feature of dataframes is that the columns may contain different datatypes. A common datatype in psychology is a factor. For instance, you may have an experimental group and control group. R has special features for factors. We can tell R a certain column is a factor using the factor function. I will show an example below.  -->
 <p>The first thing you should do after importing a new dataset is to check whether the data are in proper order and in the proper format. To view the data use the <code>View()</code> function:</p>
 <pre class="r"><code># View data frame df
@@ -302,7 +302,6 @@ ggplot(data = Salaries, aes(x = yrs.since.phd, y = salary)) + geom_point() +
 <hr />
 <ol>
 <li id="fn1"><p>By way of example, the Consumer Price Index in the FRED database is named CPIAUCSL. Not a very descriptive name. Simplifying its name to <code>cpi</code> in R will keep you from constantly asking yourself “What is CPIAUCSL?”.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>By way of example, the Consumer Price Index in the FRED database is named CPIAUCSL. Not a very descriptive name. Simplifying its name to <code>cpi</code> in R will keep you from constantly asking yourself “What is CPIAUCSL?”.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 
