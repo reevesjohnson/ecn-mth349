@@ -12,46 +12,57 @@ knit: (function(inputFile, encoding) {
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Background
+# Introduction to R
 
-Our time in class will be brief relative to the many objectives we've set out to accomplish. Practicing R outside of class is imperative, which you can do either on your own machine, by visiting the computer lab or by using one of many online sites that you can run R. I don't recommend using internet sites (e.g., RStudio Cloud) to use R on the regular because they are slow, unreliable and tend to inexplicably erase projects. But they do allow us to communicate remotely, which will likely become necessary as you work on your research projects. So while I advise against using R on the internet for out of class work, I think you should at least create an RStudio Cloud account. As its name suggests, it's RStudio (the application we use in class to run R code), but it's located on the cloud. You can access the site at <https://rstudio.cloud/>.
+## Background
 
-You'll write your R code on R script so that you can save your work. This course builds on past material, so you'll want to keep a folder where you save all your work.
+Since our time in class will be brief and will involve lots of material, you'll need to access R outside of class, either by visiting a computer lab or on your machine. Provided you have the space on your computer, I strongly recommend you download R and RStudio (you need to download both). You can download R and RStudio by visiting [\<https://www.r-project.org/\>](https://www.r-project.org/){.uri} and [\<https://www.rstudio.com/products/rstudio/download/\>](https://www.rstudio.com/products/rstudio/download/){.uri}.
 
-We'll frequently be using notes like the present ones to learn R. Your job is to create an R script, follow along by running the code, and also adding your own code. Any code executed below, whether it be a simple command that returns the mean of some numbers or generates a plot, should be included in your script.
+You can also use R on the internet, although I don't recommend this option. The best online site is RStudio Cloud. As its name suggests, it's RStudio (the application you'll use to run the programming language R), but it's located on the cloud. Aside from already being familiar with the RStudio interface, RStudio Cloud is also valuable because you can save your scripts. The reason I don't recommend using RStudio Cloud or other web-based sites is because they are unstable and prone to crashing, leaving you prone to losing all your work. But, you can access the site here: [\<https://rstudio.cloud/\>](https://rstudio.cloud/){.uri}.
 
-# Using Comments in R
+<!--# All labs require you to submit an R script with your code. I will run the code on your scripts to see if you've correctly followed this lab printout. These R scripts are therefore the basis of your lab grade for the class. It's therefore very important to save your scripts in a known location. -->
 
-When you run R code, R wants to interpret everything you command it to run. You'll frequently find yourself needing to run code you've ran in the past, but can't remember exactly what the code means or what it will do when executed. Using comments to remind yourself (and others viewing your script) what the code means and does is, perhaps, the most helpful and underappreciated way to get the hang of R. The best advice I can give you at this early stage is the following: **Comment the hell out of every script you make**. Be sure to make your comments as descriptive as possible and don't be afraid to write lengthy comments; better to have too much description than not enough.
+You'll create and save R scripts while working in and outside of class. In your scripts you'll type and run the code from these notes. Any code executed below, whether it be a simple command that returns the mean of some numbers or generates a plot, needs to be included in your scripts. Make sure to create a folder to save your scripts. These scripts reflect what you've learned over the semester and will be invaluable when you work on your projects near the end of the semester. <!--# Future labs will also include questions that you'll answer in your script. But this first lab only requires you to write code. -->
 
-To insert comments into your script use the `#` symbol at the beginning of your comment. For example, run the following lines of code:
+## Using Comments in R
+
+When you run R code, R interprets everything you command it to run. You'll frequently find yourself needing to run code you've ran in the past, but can't remember exactly what the code means or what it'll do when executed. Using comments to remind yourself (and others reading your script) what the code means and does is, perhaps, the most helpful and underappreciated way to get the hang of R. The best advice I can give you at this early stage is the following: **Comment the hell out of every script you make**. To insert comments into your script use the `#` symbol at the beginning of your comment. For example, run the following lines of code:
 
 ```{r}
-# six + six
+# Compute six plus six
 6 + 6
 ```
 
-Notice how R simply ignored the line beginning with the `#`; that line is for your understanding and not for R. I cannot understate the importance of inserting lots of comments in your script, especially when you're doing something complicated or counterintuitive. Trust me, you'll thank yourself later in the semester when you're working on your research projects and you remember you need some code from, like, week 2 but don't know what the commands look like. Your comments will save you a lot of trouble.
+Notice how R simply ignored the line beginning with the `#`; that line is for your understanding and not for R's. I cannot understate the importance of inserting lots of comments in your script, especially when you're doing something that's new or complicated or counterintuitive. Trust me, you'll thank yourself for inserting lots of comments later in the semester when you're working on your projects.
 
 # Variables and Assignment
 
-Most of your R code will require you to store it for later use. To do so you need to assign the object a name. To assign an object a name use the `<-` symbol. For example, run the following code:
+Many circumstances will require you to assign a name to objects[^1] for later use. To assign an object a name use the assignment operator, denoted by the `<-` symbol. For example, run the following code:
+
+[^1]: By way of example, the Consumer Price Index in the FRED database is named CPIAUCSL. Not a very descriptive name. Simplifying its name to `cpi` in R will keep you from constantly asking yourself "What is CPIAUCSL?".
 
 ```{r}
 multiply <- 5*6
 ```
 
-Notice that, by assigning `5*6` a name, R didn't return the number 30 (the produce of 5 and 6). Here is what R understood from the above command: The name of `5*6` is `multiply`. To get R to return the result, you need to refer to it by its name, like this:
+Notice that, by assigning `5*6` a name (`multiply`), R didn't return the number 30. Here is what R understood from the above command: The name of `5*6` is `multiply`. To get R to return the result in the Console, you need to enter its name and run it, like this:
 
 ```{r}
 multiply
 ```
 
-We'll assign names to most of the objects we'll use in this class. You should always use descriptive names for these objects to help you remember what they are. For example, if you have data on unemployment rates you might name it `ur`.
+# Naming Objects
+
+In a very general sense, there are 2 basic types of commands:
+
+1.  Commands that tell you something by returning something (e.g., a number or plot)
+2.  Commands that do something and don't return anything.
+
+The second type of command occurs when you assign objects names using the assignment operator, `<-`, which stores that object for later use. The names you choose need to be concatenated (no spaces) strings of letters and numbers, each string starting with a letter of the alphabet. I recommend using the underscore symbol, `_`, to separate your lettered-numbered strings and only using lowercase letters (e.g., `gdp_2020_data`). It's also critical to create descriptive names to help you remember what the name refers to. Don't be afraid of creating objects with long names. The benefit of immediately recognizing what an object is outweighs by far the cost of having to type longish names. And anyways, R will try to save you time typing by proposing options once you start typing. On that note, I recommend you take R's proposals, especially when learning R, in order to misspelling an object's name and generating subsequent errors.
 
 # (Built-In) Functions
 
-Functions allow us to manipulate objects. Like mathematical functions, R functions require arguments and these arguments are always enclosed by parenthesis `()`. One of the most basic and frequently used function is the concatenate function, written as `c()`. You'll use it to create a vector (an ordered sequence). For example, create a vector called `x` with some randomly chosen numbers:
+Functions manipulate objects. Like mathematical functions, R functions require arguments (inputs), and these arguments are always enclosed by brackets, `()`. One of the most basic and frequently used functions is the combine function, written as `c()`. You'll use the combine function to create vectors (an ordered sequence of elements). For example, create a vector called `x` consisting of whatever numbers you like:
 
 ```{r}
 x <- c(3, 6, -2, 0, -27)
@@ -63,55 +74,46 @@ What's the mean of `x`? Use the `mean()` function to find out:
 mean(x)
 ```
 
-Most of the functions we'll encounter have multiple arguments that then need to separated by commas. Further, functions often have default values. We can specify values by putting the name of the argument followed by an equal sign. Here is an example of a function that allows us to view the first n rows of a dataframe. The default value is six, but we can change it by using the `n =` argument, as shown below.
+Many of the functions you'll encounter have multiple arguments that then need to separated by commas. Further, functions often have default values. We can specify values by putting the name of the argument followed by a single equals sign, `=`. For example, the `head()` function shows you the first $n$ rows of a dataframe, the name of the dataframe being its only non-default argument. The default number of rows is 6, but you can alter R's default value by inserting `n =`, followed by the number of rows you want to see. Compare the output from these two commands:
 
-```{r}
+```{r, eval = FALSE}
 head(mtcars) 
-```
 
-```{r}
 head(mtcars, n = 3)
 ```
 
 # Packages
 
-Later in the semester we'll create our own functions. Fortunately, though, most of the functions we'll need are already built into base R or else can be accessed through packages. An example of a function built into base R is the `head()` function we just used. But, there are many functions that are not built into base R, and so we'll need to install and load packages.
+You'll eventually create your own functions. Fortunately, though, most of the functions you'll need are already built into base R or else can be accessed through packages. An example of a function built into base R is the `head()` function you just used. But, there are many functions that are not built into base R, and so we'll need to install and load packages.
 
-Packages are collections of functions, data and code that are created and made available by other R users. To load a package into R use the `library()` function, like this: `library(name_of_package)`. If we haven't already downloaded the package, you first need to install it using the `install.packages()` function: `install.packages("name_of_package")`. (Note the quotes around the name of the package you're installing!) Once you've installed a package you only need to use the `library()` function to load the package into R.
-
-We'll use the **tidyverse** package every day this semester, so before each session run the command:
-
-```{r eval=FALSE}
-# Load the tidyverse package into R
-library(tidyverse) 
-```
-
-It's a good habit to put `library(tidyverse)` at the top of every R script you're working with.
-
-To see which packages you've already loaded into R, click the Global Environment tab in the Environment pane (upper-left pane). If see the package you want to use listed under the Global Environment tab, then you don't need to load it into R; it's ready to use.
+Packages are collections of functions, data and code that are created and made available by other R users. To load a package into R, use the `library()` function, like this: `library(name_of_package)`. If you haven't already installed the package, you first need to run `install.packages()` with the name of the package *in quotation marks* inside the function. That is, run `install.packages("name_of_package")` before loading the package. But after you've installed a package on your machine, you only have to run the `library()` function to load the package into R.
 
 One package we'll use later on is the **car** package. To get some practice, let's install and load **car** as explained above:
 
-```{r eval=FALSE}
-install.packages("car") # Install the car package
-library(car) # Load the car package into R
+```{r, eval = FALSE, message=FALSE, warning=FALSE}
+# Install the car package
+install.packages("car") 
+
+# Load the car package into R
+library(car) 
 ```
+
+To verify if a package has been loaded into R, click Global Environment in the Environment tab in RStudio's upper-right corner. A list of all packages you loaded into R will then drop down.
 
 # Dataframes
 
-The term *dataframe* refers to datasets, and a dataframe is essentially a dynamic Excel spreadsheet. Dataframes consist of rows (observations) and columns (variables). Some dataframes are built into base R and so we don't need to install packages to access them. We have already seen an example of this with the `mtcars` dataframe.
+The term *dataframe* refers to datasets, and a dataframe is essentially a dynamic Excel spreadsheet. Dataframes consist of rows (or observations) and columns (or variables). There are some classic dataframes built into base R and so you don't need to install a package or import them in order to access them. You saw an example of this with the `mtcars` dataframe.
 
 A typical work flow may start with us importing data and saving it as a variable, like this:
 
 ```{r}
-df <- mtcars # Rename mtcars as df
+# Rename mtcars as df
+df <- mtcars 
 ```
 
-It wasn't necessary to assign the `mtcars` dataframe a new name, but it's frequently convenient to do so. The reason why, and one we'll encounter multiple times this semester, is that when we download data from websites (e.g., the Federal Reserve's FRED database), their given names are awkward alphanumeric strings and non-descriptive of the dataset.[^1]
+It wasn't necessary to assign the `mtcars` dataframe a new name, but it's frequently convenient to do so. The reason why, and one you'll encounter multiple times, is that when you download data from websites (e.g., the Federal Reserve's FRED database), the file names are nondescript, clumsy alphanumeric strings.[^2]
 
-[^1]: By way of example, the Consumer Price Index in the FRED database is named CPIAUCSL. Not a very descriptive name. Simplifying its name to `cpi` in R will keep you from constantly asking yourself "What is CPIAUCSL?".
-
-<!-- An important feature of dataframes is that the columns may contain different datatypes. A common datatype in psychology is a factor. For instance, you may have an experimental group and control group. R has special features for factors. We can tell R a certain column is a factor using the factor function. I will show an example below.  -->
+[^2]: By way of example, the Consumer Price Index in the FRED database is named CPIAUCSL. Not a very descriptive name. Simplifying its name to `cpi` in R will keep you from constantly asking yourself "What is CPIAUCSL?".
 
 The first thing you should do after importing a new dataset is to check whether the data are in proper order and in the proper format. To view the data use the `View()` function:
 
@@ -131,90 +133,121 @@ glimpse(df)
 
 We'll have much more to say about data types and dataframes later on.
 
-## Identifying Columns in a Dataframe
+# Identifying Columns in a Dataframe
 
-Often we need to access to a single column of a dataframe. For example, we may want to use the `mean()` function to get the mean of a column of numbers. Working with a particular column requires that you *extract* it from its dataframe. To extract a column use the \$ symbol as in the following example:
+You frequently need access to a single column of a dataframe. For example, you may need to use the `mean()` function to get the mean of a column of numbers. Working with a particular column requires that you *extract* it from its dataframe. To extract a column use the `$` symbol as in the following example:
 
 ```{r}
 # Take the mean mpg
 mean(df$mpg)
 ```
 
-Notice what's happening: We want to find the mean of the `mpg` column, but we need to first specify which dataframe (here `df`) the `mpg` column is located. So when we want to work with a specific column from a dataframe:
+Notice what's happening: We want to find the mean of the `mpg` column, but we need to first specify which dataframe (here `df`) the `mpg` column belongs to. So when we want to work with a specific column from a dataframe:
 
 1.  Specify the dataframe that column belongs to.
-2.  Use the `$` symbol to tell R we want extract a column from this dataframe.
+2.  Use the `$` symbol to indicate you want extract a column from this dataframe.
 3.  Specify the column you want from the dataframe.
 
-Thus, the argument inside the last command (`df$mpg`) means: *Extract the column* `mpg` *from the dataframe* `df`.
+Thus, the argument inside the last command, i.e., `df$mpg`, means: *extract the column* `mpg` *from the dataframe* `df`.
+
+<!--# Common Functions Below, I have included some examples of commonly used functions. I use a comment above the example to explain what it does. We can always use the help tab in Rstudio to look up functions to see their arguments, as needed. When the function requires a specific package, I include the library command. -->
+
+# Subsetting Dataframes
+
+Often you'll need to work with a subset of a dataframe. R offers several different ways of subsetting dataframes. In this example, we will use base R, so you don't have to load any packages.
+
+The basic subsetting problem we'll consider below deals with how to extract some data from a particular column based on a specific characteristic of interest. We might want to know, for example, the miles per gallon of cars weighing over 3,000 pounds using the `mtcars` dataframe. Here, the column is miles per gallon (`mpg`) and the characteristic of interest concerns the weight of cars (`wt`).
+
+In the code below we'll use square brackets, `[]`, to subset columns. Outside the square brackets put the column of interest using the `dataframe_name$column_name` syntax. And inside `[]` put the characteristic of interest. You can think of the code inside `[]` as a general instruction to R that says "only if these criteria are met." Here are some examples with the `mtcars` dataset, which we renamed above `df`:
+
+```{r, eval = FALSE}
+# Return miles per gallon (mpg) of cars with weight (wt) greater than 3
+df$mpg[df$wt > 3]
+
+# Calculate mean miles per gallon of 4 cylinder (cyl) cars
+mean(df$mpg[df$cyl == 4])
+
+# State multiple conditions using 'and' (&) and 'or' (|)
+df$mpg[df$wt <= 2.5 & df$hp > 100]
+df$mpg[df$wt <= 2.5 | df$hp > 100]
+```
+
+In calculating the mean miles per gallon of 4 cylinder cars, I wrote `df$cyl == 4` with a double equals sign, `==`, instead of the conventional single `=`. In R a single `=` is used inside functions when assigning values to arguments, as in the earlier example, `head(mtcars, n = 3)`. In the present case, we're subsetting data and using `==` to mean "is exactly equal to" as a testing criterion.
 
 # Graphing with `ggplot()`
 
-The gold standard for graphing and for data visualization is an R package called **ggplot2** and its corresponding function `ggplot()`. Typical plots made with the `ggplot()` function have the same basic syntax:
+The standard for graphing and for data visualization in R is a function called `ggplot()`. It comes with the **tidyverse** package. The **tidyverse** is a package we'll use every class (so load it into R at the beginning of every class). There are multiple ways to generate the same plot using `ggplot()`, and you'll eventually need to become more flexible with `ggplot()` commands as your plots become more sophisticated. But, to begin we'll use the following same basic syntax:
 
-```{r error = TRUE, eval=FALSE, message=FALSE, warning=FALSE}
-# Generic syntax for a plot
-ggplot(data = name_of_dataframe) +
-  geom_***(mapping = aes(x = column_name, y = column_name))
+```{r error = TRUE, eval = FALSE, message = FALSE, warning = FALSE}
+# Generic syntax for ggplot()
+ggplot(data = name_of_dataframe, mapping = aes(x = column_name, y = column_name)) + 
+  geom_???()
 ```
 
-To create a plot:
+Steps to generate plots with `ggplot()`:
 
 1.  Begin by calling the `ggplot()` function.
-
-2.  The name of your dataframe is the first argument of the `ggplot()` function.
-
-3.  After specifying your dataframe you need to decide how you want the data to be displayed. Do you want you plot to be a scatterplot or a histogram or a bar chart? That's what the `geom_***()` function is for. The `***` is just a placeholder for which type of geometry you decide on (e.g., `geom_point()` or `geom_histogram()` or `geom_bar()`.)
-
-4.  The final step is to determined the variable(s) you want to appear on your plot. That's what the `aes()` function is for, which is short for "aesthetics." Inside `aes()` indicate which variable you want displayed on the x-axis and, if necessary, which you want on the y-axis. These variables need to be column names of the dataframe you specified in Step 2.
+2.  The name of your dataframe is the first argument of the `ggplot()` function. That's the `data = name_of_dataframe` part.
+3.  After specifying your dataframe you need to decide which variable(s) you want to appear in the plot. That's what the `aes()` function is for. The *aes* in `aes()` is short for "aesthetics," meaning in this context the visual *appearance* of the plot. Accordingly, you'll indicate which variable you want displayed on the $x$-axis and, if necessary, which you want on the $y$-axis inside the `aes()` function.
+4.  The final step for a basic plot is to determine its geometry. Do you want the graph to be a scatterplot? A histogram? A bar chart? That's what the `geom_???()` function is for. The `???` is just a placeholder for the type of geometry you decide on (e.g., `geom_point()` or `geom_histogram()` or `geom_bar()`.) (Notice also that I put `geom_???()` on a new line. If you move to a new line you must end the previous line with a `+`. This tells R there's more code coming on the next line. If, instead, you put `+ geom_???()` on the next line, then R will either return a message indicating errors were made or else generate a plot you didn't intend to create.)
 
 <!-- Notice that we use a function, `aes()`, inside the `ggplot()` function, and we use a plus sign to connect different commands. -->
 
 <!-- Inside the `aes()` function we put our variables, though the exact information will depend on the specific plot we are making. The ``geom_???()` is not complete. After the underscore, we design the plot we wish to make (e.g., a dotplot, a scatterplot, a bar graph).   -->
 
-Let's make plots using the data in the **car** package that we've already installed and loaded. Next, load **ggplot2**, which should be preinstalled so all we need to do is load the package:
+Let's create plots using the data in the **car** package that you've already installed and loaded. Also, install and load **tidyverse** if you haven't already.
 
-```{r}
-# Load the ggplot2 package
-library(ggplot2) 
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# Load the car package
+library(car) 
 ```
 
-Now, we'll use a dataset in the **car** package called `Salaries`. To see what kind of data we're dealing with run the `View()` and Let's create a scatter plot of the years since professors received their PhD versus their salaries:
-
-```{r, echo=FALSE}
-library(car)
+```{r, message=FALSE, warning=FALSE}
+# Load the tidyverse package
+library(tidyverse) 
 ```
+
+Now, we'll use the `Salaries` dataset in the **car** package, which you should have already loaded into R. To see what kind of data we're dealing with use `View()`. Let's create a scatterplot of the years since professors received their PhD versus their salaries:
 
 ```{r, out.width = "70%", fig.align = "center"}
 # Create a scatterplot
-ggplot(data = Salaries, aes(x = yrs.since.phd, y = salary)) + geom_point()
+ggplot(data = Salaries, mapping = aes(x = yrs.since.phd, y = salary)) + 
+  geom_point()
 ```
 
-Notice that, when specifying the x and y variables, we didn't use the dataframe\$column syntax. That's because we already told R which dataframe we want to use, `Salaries`, and so R then knows which columns make up the dataframe.
+Notice that, when specifying the x and y variables, we didn't use the `dataframe_name$column_name` syntax. That's because R already knows which dataframe we want to use, `Salaries`, and so R then knows which columns make up the dataframe.
 
-From personal experience I understand that **ggplot2** has a large learning curve. There are two primary reasons for using it: (1) there's broad consensus that it's the best graphical package available and (2) the graphs are easy to customize.
+From personal experience I realize that `ggplot()` has a steeper learning curve than other functions in R. But there are 2 decisive reasons for using it: (1) It's the most powerful graphing function in R and (2) the graphs are easy to customize.
 
-Let's consider some of the customization options of **ggplot2**. First, let's add a regression line to represent how a professor's salary tends to change the greater the number of years has elapsed since receiving their PhD. To do so, we add the `geom_smooth()` function to the previous code with two arguments, as shown below:
+Let's consider some of the customization options of `ggplot()`. First, let's add a regression line to represent how a professor's salary tends to change the greater the number of years has elapsed since receiving their PhD. To do so, we add the `geom_smooth()` function to the previous code with two arguments, as shown below:
 
-```{r, out.width = "70%", fig.align = "center"}
+```{r, eval = FALSE, messages = FALSE, alerts = FALSE, out.width = "70%", fig.align = "center"}
 # Add a regression line to the scatterplot
-ggplot(data = Salaries, aes(x = yrs.since.phd, y = salary)) + geom_point() +
+ggplot(data = Salaries, 
+       mapping = aes(x = yrs.since.phd, y = salary)) + 
+  geom_point() +
   geom_smooth(method = "lm", se = FALSE)
 ```
 
-Judging from the regression line, salaries tend to be lower for professors who received their PhD more recently.
+Note the 2 arguments inside `geom_smooth()`. I put `"lm"` as its `method` in order to produce a regression *line.* (As you'll soon learn, `lm` stands for linear model in R.) You must always specify the `method` of the smoothing curve you want to fit the data. I added a second argument, `se = FALSE`, because I didn't want confidence intervals around the line. Confidence intervals are the default so if you don't include `se = FALSE` your plot will come with bands around your smoothing curve.
+
+Now, judging from the regression line, salaries tend to be lower for professors who received their PhD more recently. This isn't surprising.
 
 The `Salaries` dataframe also includes a column called `sex` that indicates the gender of each professor in the dataset. Let's return to a simple scatterplot without the regression line, but now let's distinguish between female and male professors. We do this by including a third argument in the `aes()` called `color`:
 
 ```{r, out.width = "70%", fig.align = "center"}
-ggplot(data=Salaries, aes(x=yrs.since.phd, y=salary, color=sex)) + geom_point()
+ggplot(data = Salaries, 
+       mapping = aes(x = yrs.since.phd, y = salary, color = sex)) + 
+  geom_point()
 ```
 
 Finally, let's add a regression line as before to this new scatterplot:
 
 ```{r, out.width = "70%", fig.align = "center"}
-ggplot(data = Salaries, aes(x = yrs.since.phd, y = salary, color = sex)) + geom_point() + 
+ggplot(data = Salaries, 
+       mapping = aes(x = yrs.since.phd, y = salary, color = sex)) + 
+  geom_point() + 
   geom_smooth(method = "lm", se = FALSE)
 ```
 
-Note that by adding the third variable, `sex`, we now have two regression lines: One indicating the average change in salaries for females and a seperate one for males.
+Note that by adding the third variable, `sex`, we now have two regression lines: One indicating the average change in salaries for females and a separate one for males.

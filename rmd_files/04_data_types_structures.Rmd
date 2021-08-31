@@ -54,7 +54,7 @@ After creating `df` nothing returned in the Console. This is again because a nam
 
 If you need to determine whether you're dealing with a data frame or a vector, the quickest way is to look at the Environment pane. As mentioned above, if your dataset is under the Data heading, then it's a data frame. If it's under the Values heading, then it's a vector.
 
-### Identifying Columns in a data frame
+### Identifying Columns in a Data Frame
 
 Pretty much every time you use R, you'll need to work with particular columns from a data frame. To work with a particular column, first specify the data frame and then the column's name, with the data frame and column separated by `$`. For example, to extract column `a` from data frame `df` run the command:
 

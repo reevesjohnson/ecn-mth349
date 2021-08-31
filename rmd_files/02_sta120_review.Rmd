@@ -206,15 +206,11 @@ The standardized value, $z_i$, is the distance of $x_i$ from the mean $\bar{x}$ 
 
 Consider this table with the necessary information to calculate Thiam's and Johnson-Thompson's *z*-scores:
 
-+------------------------+---------------------+----------------------------------+
 |                        | Long Jump           | 200-Meter Dash                   |
-+========================+=====================+==================================+
+|------------------------|---------------------|----------------------------------|
 | Mean                   | 6.17 meters         | 24.58 seconds                    |
-+------------------------+---------------------+----------------------------------+
 | Standard Deviation     | 0.247 meters        | 0.654 seconds                    |
-+------------------------+---------------------+----------------------------------+
 | Individual Performance | 6.58 meters (Thiam) | 23.26 seconds (Johnson-Thompson) |
-+------------------------+---------------------+----------------------------------+
 
 Before computing these *z*-scores, let's concentrate on the long jump and see how 1 and 2 standard deviations above the mean compares to Thiam's jump of 6.58 meters. A long jump 1 standard deviation above the mean is: $6.17 + 1(0.247) = 6.417$. Similarly, a jump of 2 standard deviations above the mean is: $6.17+2(0.247)=6.664$. Observe, then, that Thiam's jump of 6.58 meters is just below 2 standard deviations from the mean. Without calculating the *z*-score, then, we already know Thiam's jump will fall just short of 2 standard deviations.
 

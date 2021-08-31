@@ -70,37 +70,36 @@ Let's tidy the `pop_df` data frame first.
 
 ```{r}
 # Transform longitudinal data into tidy data
-pop_df <- pop_df %>% 
+pop_gather_df <- pop_df %>% 
   select(country:`2010`) %>% 
   gather(key = year, value = pop, `1799`:`2010`)
 ```
 
 ```{r}
 # Alternative approach with pivot_longer()
-pop_df <- pop_df %>%
+pop_pivot <- pop_df %>%
   select(country:`2010`) %>% 
   pivot_longer(!country, names_to = "year", values_to = "pop")
 ```
 
-Notice something about We'll index the year columns to save time. But, instead of entering the first and last years within quotes, that is, `"1799":"2099"`, you need to enclose the years with backticks, `` `1799`:`2099` ``. This is necessary because, despite the years being names, they're *non-syntactic*, meaning they violate the rules for named objects. As you know, the first symbol of a name must be a letter and not a number. R, however, automatically imports columns with the names from the original data file, irrespective of whether R's naming rules. So you need different notation when calling non-syntactic names.
+Notice something about how the year columns are indexed. Instead of entering the first and last years within quotes, that is, `"1799":"2099"`, you need to enclose the years with backticks, `` `1799`:`2099` ``. This is necessary because, despite the years being names, they're *non-syntactic*, meaning they violate the rules for named objects. As you know, the first symbol of a name must be a letter and not a number. R, however, automatically imports columns with the names from the original data file, irrespective of whether R's naming rules. So you need different notation when calling non-syntactic names.
 
-**EXPLAIN THE SYNTAX OF GATHER(); SEE THIS FOR BETTER EXPLANATION <https://remiller1450.github.io/s230s19/Tidy_Data.html>**
+<!--# EXPLAIN THE SYNTAX OF GATHER(); SEE THIS FOR BETTER EXPLANATION https://remiller1450.github.io/s230s19/Tidy_Data.html -->
 
-Though `pop_df` now has a tidy structure, there's a serious obstacle standing in the way of analyzing these data. If you viewed the data frame, you probably noticed the `M`'s and the `k`'s after each country's population to abbreviate numbers in the millions and thousands. R, in turn, interpreted the values as characters, which is ultimately why both the `year` and `pop` vectors are character vectors in `pop_df`. If you're going to analyze these data, you'll need to convert the `pop` vector to a double vector. This requires 2 separate tasks:
+Though `pop_gather_df` now has a tidy structure, there's a serious obstacle standing in the way of analyzing these data. If you viewed the data frame, you probably noticed the `M`'s and the `k`'s after each country's population to abbreviate numbers in the millions and thousands. R, in turn, interpreted the values as characters, which is ultimately why both the `year` and `pop` vectors are character vectors in `pop_gather_df`. If you're going to analyze these data, you'll need to convert the `pop` vector to a double vector. This requires 2 separate tasks:
 
 1.  Remove the `M`'s and the `k`'s from the entries in `pop`
 2.  Convert the remaining number to its appropriate form by either multiplying it by 1000000 or 1000.
 
-To that end, we'll add a new vector to `pop_df`, which we'll call `pop_corrected`, with `mutate()`. Now, to be frank, these aren't simple tasks and accomplishing them will require some challenging coding with new functions. But this is such a common problem when collecting data it merits careful attention. Here's the code:
+To that end, we'll add a new vector to `pop_gather_df`, which we'll call `pop_corrected`, with `mutate()`. Now, to be frank, these aren't simple tasks and accomplishing them will require some challenging coding with new functions. But this is such a common problem when collecting data it merits careful attention. Here's the code:
 
 ```{r}
 # Remove M and k and convert to numbers
-pop_df <- pop_df %>%
+pop_gather_df <- pop_gather_df %>%
   mutate(pop_corrected = case_when(
-    str_detect(pop_df$pop, "M") ~ parse_number(pop_df$pop)*1e6,
-    str_detect(pop_df$pop, "k") ~ parse_number(pop_df$pop)*1e3,
-    TRUE ~ parse_number(pop_df$pop)
-  ))
+    str_detect(pop_gather_df$pop, "M") ~ parse_number(pop_gather_df$pop)*1e6,
+    str_detect(pop_gather_df$pop, "k") ~ parse_number(pop_gather_df$pop)*1e3,
+    TRUE ~ parse_number(pop_gather_df$pop)))
 ```
 
 The command should be familiar until the start of the new column `pop_corrected`'s definition. The definition starts with the `case_when()` function, which is a generalization of the `if_else()`.[^2] Like `if_else()`, and as its name suggests, `case_when()` deals with cases, and specifically a group of mutually-exclusive and exhaustive cases. Also like `if_else()`, each case of `case_when()` begins with a logical condition, that is, a statement that either evaluates to `TRUE` or `FALSE`. Each case inside `case_when()` has a left- and right-hand side, the sides separated by `~`. The logical condition takes the left position and, if true, returns the value(s) on the right-hand side of `~`. If false, the next logical condition is checked, continuing until the logical condition is satisfied.
@@ -113,11 +112,11 @@ Okay. What cases do you to consider? For this problem, there are 3:
 2.  There are cells that end with an `k`
 3.  And then there are cells that neither end in `M` nor `k`.
 
-We need to identify each of these 3 cases with a logical condition. To that end, use the `str_detect()` function. This function checks whether a particular string (sequence of letters/numbers) is contained in a vector. If the string is present, then `str_detect()` returns `TRUE`. If not, it evaluates to `FALSE`. So, the first two cases have the following logical conditions: `str_detect(pop_df$pop, 'M')` and `str_detect(pop_df$pop, 'k')`.
+We need to identify each of these 3 cases with a logical condition. To that end, use the `str_detect()` function. This function checks whether a particular string (sequence of letters/numbers) is contained in a vector. If the string is present, then `str_detect()` returns `TRUE`. If not, it evaluates to `FALSE`. So, the first two cases have the following logical conditions: `str_detect(pop_gather_df$pop, 'M')` and `str_detect(pop_gather_df$pop, 'k')`.
 
 Before considering the third and final case, let's examine the right-hand sides of these two conditions. As already noted, the expression on the right-hand side of a `case_when()` argument is evaluated if the logical condition is true. In the present example, if the condition is true, we need the `M` or `k` after the value removed. To do this, we'll use the `parse_number()` function.
 
-The `parse_number()` function deals with a common data problem; namely, that numbers are often surrounded by non-numerical signs like currencies (e.g., \$500) and percentages (e.g., 0.7%). The `parse_number()` function drops non-numeric characters before and after numbers. You can then enter `parse_number(pop_df$pop)` to remove the unwanted `M`'s and `k`'s.
+The `parse_number()` function deals with a common data problem; namely, that numbers are often surrounded by non-numerical signs like currencies (e.g., \$500) and percentages (e.g., 0.7%). The `parse_number()` function drops non-numeric characters before and after numbers. You can then enter `parse_number(pop_gather_df$pop)` to remove the unwanted `M`'s and `k`'s.
 
 But this alone won't solve the problem. To understand why, see what happens when you remove the `M` and `k` from the first and third entries in the `pop` vector These entries are `3.28M` and `400k`.
 
@@ -131,44 +130,42 @@ parse_number("400k")
 
 Now, 3.28 million people is obviously more than 400,000 people, but 3.28 "people" are less than 400 people. To rectify the situation, you need to multiply `parse_number("3.28M")` by 1 million (i.e., `1e6`) and `parse_number("400k")` by 1000 (i.e., `1e4`) so that the order of the population numbers is preserved. That's why you see `*1e6` and `*1e4` after the `parse_number()` functions.
 
-There's still the final case to consider: Those entries followed neither by `M` nor `k`. These entries do exist in `pop_df`; the population of the Holy See in 1799 is 905, for example. But even if you're pretty certain all entries are followed by either `M` or `k`, and thus the first 2 cases exhaust all possible cases, it's good practice to include a final case, mutually exclusive of the previous ones, that would capture any instances that didn't satisfy the other logical conditions. In this example, any entry in `pop` that failed to satisfy either the first or second case, will automatically satisfy this final case and its value will be unchanged in the new vector. The final case can then be expressed as: `TRUE ~ parse_number(pop_df$pop)`.[^3]
+There's still the final case to consider: Those entries followed neither by `M` nor `k`. These entries do exist in `pop_gather_df`; the population of the Holy See in 1799 is 905, for example. But even if you're pretty certain all entries are followed by either `M` or `k`, and thus the first 2 cases exhaust all possible cases, it's good practice to include a final case, mutually exclusive of the previous ones, that would capture any instances that didn't satisfy the other logical conditions. In this example, any entry in `pop` that failed to satisfy either the first or second case, will automatically satisfy this final case and its value will be unchanged in the new vector. The final case can then be expressed as: `TRUE ~ parse_number(pop_gather_df$pop)`.[^3]
 
-[^3]: We used `parse_number(pop_df$pop)`, instead of simply `pop_df$pop`, because the new vector, `pop_number`, needs to be a double and the `parse_number()` function returns a double.
+[^3]: We used `parse_number(pop_gather_df$pop)`, instead of simply `pop_gather_df$pop`, because the new vector, `pop_number`, needs to be a double and the `parse_number()` function returns a double.
 
 After this longish explanation of what's happening inside `case_when()`, read the code again and try putting it into words. Here's the entire code block again:
 
 ```{r}
 # Remove M and k and convert to numbers
-pop_df <- pop_df %>%
+pop_gather_df <- pop_gather_df %>%
   mutate(pop_corrected = case_when(
-    str_detect(pop_df$pop, "M") ~ parse_number(pop_df$pop)*1e6,
-    str_detect(pop_df$pop, "k") ~ parse_number(pop_df$pop)*1e3,
-    TRUE ~ parse_number(pop_df$pop)
-  ))
+    str_detect(pop_gather_df$pop, "M") ~ parse_number(pop_gather_df$pop)*1e6,
+    str_detect(pop_gather_df$pop, "k") ~ parse_number(pop_gather_df$pop)*1e3,
+    TRUE ~ parse_number(pop_gather_df$pop)))
 ```
 
-Okay. So we've tidied `pop_df`. Now, use `glimpse()` to verify that `le_df` and `income_df` are both untidy, too. While you're glimpsing the data, also check the data types of the vectors. If the year vectors of either life expectancies or incomes are character vectors, indicated by `<chr>` before its values, this means you'll have to create a new, corrected vector like we just went over.[^4]
+Okay. So we've tidied `pop_gather_df`. Now, use `glimpse()` to verify that `le_df` and `income_df` are both untidy, too. While you're glimpsing the data, also check the data types of the vectors. If the year vectors of either life expectancies or incomes are character vectors, indicated by `<chr>` before its values, this means you'll have to create a new, corrected vector like we just went over.[^4]
 
-[^4]: You might be wondering about R's decision procedure when importing alphanumeric data like the population data with its numbers followed by `M`'s and `k`'s. Does R categorize such vectors as doubles or character vectors or some other data type? The general rule is that, given a vector containing multiple data types, the most complex data type always wins. A character vector is the most complex because each of its entries is a string. This is why R interpreted the years in the `pop_df` as character vectors. Numeric vectors (doubles and integer vectors) are second to character vectors in complexity. Finally, logical vectors are the least complex because their entries can only assume 3 values: `TRUE`, `FALSE`, and `NA`.
+[^4]: You might be wondering about R's decision procedure when importing alphanumeric data like the population data with its numbers followed by `M`'s and `k`'s. Does R categorize such vectors as doubles or character vectors or some other data type? The general rule is that, given a vector containing multiple data types, the most complex data type always wins. A character vector is the most complex because each of its entries is a string. This is why R interpreted the years in the `pop_gather_df` as character vectors. Numeric vectors (doubles and integer vectors) are second to character vectors in complexity. Finally, logical vectors are the least complex because their entries can only assume 3 values: `TRUE`, `FALSE`, and `NA`.
 
 Since these data sets are untidy, transform them into tidy data frames. As before, restrict the years to be in the range 1799-2010 by using `select()`.
 
-```{r, include = FALSE}
+```{r}
 # Transform longitudinal data into tidy data
-le_df <- le_df %>% 
+le_gather_df <- le_df %>% 
   select(country:`2010`) %>% 
   gather(key = year, value = le, `1799`:`2010`)
 
 # Transform longitudinal data into tidy data
-income_df <- income_df %>% 
+income_gather_df <- income_df %>% 
   select(country:`2010`) %>% 
   gather(key = year, value = income, `1799`:`2010`) 
 
-income_df <- income_df %>% 
+income_gather_df <- income_gather_df %>% 
   mutate(income_corrected = case_when(
-    str_detect(income_df$income, "k") ~ parse_number(income_df$income)*1e3,
-    TRUE ~ parse_number(income_df$income)
-  ))
+    str_detect(income_gather_df$income, "k") ~ parse_number(income_gather_df$income)*1e3,
+    TRUE ~ parse_number(income_gather_df$income)))
 ```
 
 # Relational Data
@@ -189,13 +186,13 @@ When data are spread across multiple related tables it's often necessary to *joi
 
 Left joins are the most common, because they add data from a smaller table `y` into a larger table `x` without removing anything from `x`. In what follows, though, we'll concentrate on full joins.
 
-In the previous section you transformed 3 untidy datasets into tidy ones. Merging these datasets, `pop_df`, `income_df` and `le_df`, will prove to be a straightforward exercise in relational data because all 3 data frames uniquely identify any particular observation with the same key. A *key* is a variable or set of variables that uniquely identify observations. Keys are what permit datasets to be related to one another. For our 3 data frames, the variables `country` and `year` together identify any specific observation in their respective data frames.
+In the previous section you transformed 3 untidy datasets into tidy ones. Merging these datasets, `pop_gather_df`, `income_gather_df` and `le_gather_df`, will prove to be a straightforward exercise in relational data because all 3 data frames uniquely identify any particular observation with the same key. A *key* is a variable or set of variables that uniquely identify observations. Keys are what permit datasets to be related to one another. For our 3 data frames, the variables `country` and `year` together identify any specific observation in their respective data frames.
 
 It's important to recognize that neither `country` nor `year` by itself could serve as a key. Suppose, for example, you only chose `country` as the key to merge these data frames. Each country in these data frames has 212 observations; either a population count, a life expectancy estimate, or income per capita in every year from 1799 until 2010. That is, $(2010 - 1799) + 1 = 212$ observations per country. You can verify this using the `count()` function, which counts unique values for one or more variables. When followed by the `filter` command, `filter(n > 1)`, a data frame counting how many duplicate rows per country is returned:
 
 ```{r, results = 'hide'}
 # Count number of unique observations by country
-income_df %>% count(country) %>% filter(n > 1)
+income_gather_df %>% count(country) %>% filter(n > 1)
 ```
 
 The `country` vector clearly can't uniquely identify observations since, as verified, each country has 212 observations.
@@ -204,31 +201,40 @@ Adding `year` inside `count()` verifies that `country` and `year` together ident
 
 ```{r, results = 'hide'}
 # Count number of unique observations by country and by year
-income_df %>% count(country, year) %>% filter(n > 1)
+income_gather_df %>% count(country, year) %>% filter(n > 1)
 ```
 
-So we know our key to merge these data frames. **HAVE STUDENTS READ PPS. 171-86 IN R4DS.**
+So we know our key to merge these data frames.
 
 ```{r}
-# Full join pop_df and income_df using country and year as keys
-gapminder_df <- pop_df %>% 
-  full_join(income_df, by = c("country", "year"))
+# Full join pop_gather_df and income_gather_df using country and year as keys
+gapminder_df <- pop_gather_df %>% 
+  full_join(income_gather_df, by = c("country", "year"))
 ```
 
-Then join `le_df`
+Then join `le_gather_df`.
 
 ```{r}
-# Full join gapminder_df and income_df using same as keys
+# Full join gapminder_df and income_gather_df using same as keys
 gapminder_df <- gapminder_df %>% 
-  full_join(le_df, by = c("country", "year"))
+  full_join(le_gather_df, by = c("country", "year"))
 ```
 
-```{r}
-pais <- read_csv("/Users/reeves.johnson/OneDrive - Maryville College/maryville_od/ECN 349 - R Class/notes/cont.csv")
+We've merged 3 datasets into 1. Let's join a dataset consisting of country and continent information and then put it all together in a plot.
+
+```{r, warning = FALSE, message = FALSE}
+# Import dataset with country names
+pais <- read_csv("https://bit.ly/3mrRfk4")
+
+# Join pais df to gapminder_df
 paises <- pais %>% 
   full_join(gapminder_df, by = "country")
+```
 
-# Plot income v le in 2009
+Now for the plot:
+
+```{r}
+# Plot income v le in 2009 with population and continent 
 paises %>% filter(year == 2009 & continent != "NA") %>% 
   ggplot(mapping = aes(x = income_corrected, y = le, size = pop_corrected)) + 
   geom_point(mapping = aes(color = continent)) + 

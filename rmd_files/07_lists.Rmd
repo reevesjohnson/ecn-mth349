@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
-# Vectors, Again
+# Vectors (Again)
 
 Recall that a **vector** is a sequence of entries of the *same data type*. The following are all vectors:
 
@@ -215,4 +215,12 @@ output_map <- map(normal_list, mean_and_sd)
 
 Compare `output` to `output_map` to confirm the same object is returned, i.e., a list consisting of 4 tibbles, each with a mean and standard deviation.
 
-The `map()` permits you to narrow your focus on the 2 core components of iteration: The object to be iterated over and the function applied to that object. All the iteration book-keeping and additional code necessary when crafting a for loop are behind the scenes when calling `map()`, allowing you to concentrate on what's fundamental.
+The `map()` permits you to narrow your focus on the 2 core components of iteration: The object to be iterated over and the function applied to that object. All the iteration book-keeping and additional code necessary when crafting a for loop are behind the scenes when calling `map()`, making the code much clearer to comprehend.
+
+Consider the following commands and explain to yourself what you think they do prior to running the code:
+
+```{r}
+output_med <- map(normal_list, median)
+
+output_iqr <- map(normal_list, IQR)
+```
