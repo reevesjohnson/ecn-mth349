@@ -169,7 +169,7 @@ pre code {
 
 
 <div id="vectors-again" class="section level1">
-<h1>Vectors, Again</h1>
+<h1>Vectors (Again)</h1>
 <p>Recall that a <strong>vector</strong> is a sequence of entries of the <em>same data type</em>. The following are all vectors:</p>
 <pre class="r"><code># Create numeric, character and logical vectors 
 numerics &lt;- c(1, 2.5, 5, -1, 0.08, 0)
@@ -309,7 +309,11 @@ for (i in seq_along(normal_list)) {
 <pre class="r"><code># Use map to return means and sds of normal_list 
 output_map &lt;- map(normal_list, mean_and_sd)</code></pre>
 <p>Compare <code>output</code> to <code>output_map</code> to confirm the same object is returned, i.e., a list consisting of 4 tibbles, each with a mean and standard deviation.</p>
-<p>The <code>map()</code> permits you to narrow your focus on the 2 core components of iteration: The object to be iterated over and the function applied to that object. All the iteration book-keeping and additional code necessary when crafting a for loop are behind the scenes when calling <code>map()</code>, allowing you to concentrate on what’s fundamental.</p>
+<p>The <code>map()</code> permits you to narrow your focus on the 2 core components of iteration: The object to be iterated over and the function applied to that object. All the iteration book-keeping and additional code necessary when crafting a for loop are behind the scenes when calling <code>map()</code>, making the code much clearer to comprehend.</p>
+<p>Consider the following commands and see if you can explain to yourself what they do prior to running the code:</p>
+<pre class="r"><code>output_med &lt;- map(normal_list, median)
+
+output_iqr &lt;- map(normal_list, IQR)</code></pre>
 </div>
 
 
